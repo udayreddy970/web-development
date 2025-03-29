@@ -1,0 +1,106 @@
+
+Task 3: Online Quiz Maker
+
+
+
+
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const QuizPlatform = () => {
+  const [quizzes, setQuizzes] = useState([
+    {
+      id: 1,
+      title: "JavaScript Basics",
+      questions: [
+        { question: "What is the keyword used to declare a constant in JavaScript?", options: ["let", "const", "var"], answer: "const" },
+        { question: "Which operator is used for strict equality?", options: ["==", "===", "!="], answer: "===" },
+      ],
+    },
+    {
+      id: 2,
+      title: "React Fundamentals",
+      questions: [
+        { question: "What hook is used for state management?", options: ["useEffect", "useState", "useReducer"], answer: "useState" },
+        { question: "What does JSX stand for?", options: ["JavaScript XML", "Java Syntax Extension", "JSON Syntax Expansion"], answer: "JavaScript XML" },
+      ],
+    },
+  ]);
+
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [score, setScore] = useState(0);
+
+  const startQuiz = (quiz) => {
+    setCurrentQuiz(quiz);
+    setScore(0);
+  };
+
+  const handleAnswer = (selected, correct) => {
+    if (selected === correct) {
+      setScore((prev) => prev + 1);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
+      <header className="text-center py-8">
+        <h1 className="text-4xl font-bold">Quiz Platform</h1>
+        <p className="text-lg">Create and take interactive quizzes!</p>
+      </header>
+
+      <div className="container mx-auto">
+        {currentQuiz ? (
+          <div>
+            <h2 className="text-3xl font-bold mb-4">{currentQuiz.title}</h2>
+            {currentQuiz.questions.map((q, index) => (
+              <Card key={index} className="mb-4 p-4 shadow-lg">
+                <CardContent>
+                  <h3 className="text-xl font-bold">{q.question}</h3>
+                  <div className="flex gap-4 mt-2">
+                    {q.options.map((option, idx) => (
+                      <Button
+                        key={idx}
+                        className="bg-blue-600 text-white"
+                        onClick={() => handleAnswer(option, q.answer)}
+                      >
+                        {option}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            <p className="text-2xl mt-4">Score: {score} / {currentQuiz.questions.length}</p>
+            <Button className="mt-4 bg-red-600 text-white" onClick={() => setCurrentQuiz(null)}>
+              Back to Quizzes
+            </Button>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {quizzes.map((quiz) => (
+              <motion.div key={quiz.id} whileHover={{ scale: 1.05 }}>
+                <Card className="p-4 shadow-lg">
+                  <CardContent>
+                    <h3 className="text-2xl font-bold">{quiz.title}</h3>
+                    <p className="text-sm">{quiz.questions.length} Questions</p>
+                    <Button
+                      className="mt-4 bg-blue-600 text-white"
+                      onClick={() => startQuiz(quiz)}
+                    >
+                      Start Quiz
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default QuizPlatform;
+

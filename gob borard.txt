@@ -1,0 +1,88 @@
+
+Task 2: Job Board
+
+
+
+
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const jobsData = [
+  { id: 1, title: "Frontend Developer", company: "Tech Corp", location: "Remote", category: "Software" },
+  { id: 2, title: "Data Scientist", company: "Data Inc.", location: "New York, NY", category: "Data Science" },
+  { id: 3, title: "UX Designer", company: "Creative Studio", location: "San Francisco, CA", category: "Design" },
+  { id: 4, title: "Full-Stack Engineer", company: "DevWorks", location: "Remote", category: "Software" },
+];
+
+const JobBoard = () => {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+
+  const filteredJobs = jobsData.filter((job) =>
+    (job.title.toLowerCase().includes(search.toLowerCase()) ||
+      job.company.toLowerCase().includes(search.toLowerCase())) &&
+    (filter === "" || job.category === filter)
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-100 text-gray-900 p-6">
+      <header className="text-center py-8">
+        <h1 className="text-4xl font-bold">Job Board</h1>
+        <p className="text-lg">Find your next opportunity!</p>
+      </header>
+
+      {/* Search and Filter Controls */}
+      <div className="flex justify-center gap-4 mb-8">
+        <input
+          type="text"
+          placeholder="Search by title or company"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="p-3 border rounded-lg w-1/3"
+        />
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="p-3 border rounded-lg w-1/4"
+        >
+          <option value="">All Categories</option>
+          <option value="Software">Software</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Design">Design</option>
+        </select>
+      </div>
+
+      {/* Job Listings */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {filteredJobs.map((job) => (
+          <motion.div
+            key={job.id}
+            whileHover={{ scale: 1.05 }}
+            className="transition-transform"
+          >
+            <Card className="p-4 shadow-lg">
+              <CardContent>
+                <h3 className="text-2xl font-bold">{job.title}</h3>
+                <p className="text-lg">{job.company}</p>
+                <p className="text-sm">{job.location}</p>
+                <span className="block mt-2 text-blue-600">{job.category}</span>
+                <Button className="mt-4 bg-blue-600 text-white">Apply Now</Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* No results message */}
+      {filteredJobs.length === 0 && (
+        <p className="text-center text-lg mt-8">No jobs found. Try different filters or search criteria.</p>
+      )}
+    </div>
+  );
+};
+
+export default JobBoard;
+
+
